@@ -1,0 +1,42 @@
+tables:
+
+Customers;
+ID PK
+Username 
+email
+pass
+address
+
+OrderItems;
+MenuItemID,
+Qty,
+OrderID 
+
+CustomersOrders;
+OrderID, CustomerID
+date,
+bill,
+status
+
+OrderItemsHistory;
+
+OrderHistory;
+ID pk,
+
+
+
+MenuItems;
+ID PK,
+name,
+qty,
+category,
+price
+
+DeliveryGuys;
+
+
+
+Delivery;
+
+Admins;
+
