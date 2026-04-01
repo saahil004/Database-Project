@@ -1,11 +1,8 @@
 import connectDB from "./db/db.js"
-import express from "express"
-import cors from "cors"
+import { app } from "./app.js"
 
-const app = express()
-app.use(cors())
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 let db
 
@@ -37,7 +34,3 @@ const start = async () => {
 }
 
 start()
-
-app.listen(port, () => {
-    console.log(`Listening on ${port}`)
-})
