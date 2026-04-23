@@ -1,36 +1,64 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from 'axios'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Layout from './components/layout'
+import Menu from './pages/menu'
+import CustomerLogin from './pages/customer.login'
+import AdminLogin from './pages/admin.login'
+import CustomerRegister from './pages/customer.register'
+import AdminDashboard from './pages/admin/Dashboard'
+import AdminPortal from './pages/admin/AdminPortal.jsx'
+import AddMenuItem from './pages/admin/AddMenuItem.jsx'
+import MenuManagement from './pages/admin/MenuManagement.jsx'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { CartProvider } from './contexts/CartContext'
+import Cart from './pages/Cart'
+import MyOrders from './pages/MyOrders.jsx'
+import Home from './pages/Home.jsx'
+import About from './pages/About.jsx'
+import Help from './pages/Help.jsx'
+
+function ProtectedRoute({ children, role }) {
+  const { user, isAuthenticated } = useAuth()
+  if (!isAuthenticated) return <Navigate to="/customerlogin" />
+  if (role && user.role !== role) return <Navigate to="/menu" />
+  return children
+}
+
+function AppContent() {
+  return (
+    <Routes>
+      <Route path='/' element={<Layout/>}>
+        <Route index element={<Home/>}/>
+        <Route path='menu' element={<Menu/>}/>
+
+        <Route path='about' element={<About/>}/>
+        <Route path='help' element={<Help/>}/>
+
+
+        <Route path='cart' element={<Cart/>}/>
+        <Route path='myorders' element={<ProtectedRoute role="customer"><MyOrders/></ProtectedRoute>}/>
+        <Route path='customerlogin' element={<CustomerLogin/>}/>
+        <Route path='adminlogin' element={<AdminLogin/>}/>
+        <Route path='deliveryguylogin' element={<CustomerLogin/>}/>
+        <Route path='customerregister' element={<CustomerRegister/>}/>
+        <Route path='admin/portal' element={<ProtectedRoute role="admin"><AdminPortal/></ProtectedRoute>}/>
+        <Route path='admin/dashboard' element={<ProtectedRoute role="admin"><AdminDashboard/></ProtectedRoute>}/>
+        <Route path='admin/addmenuitem' element={<ProtectedRoute role="admin"><AddMenuItem/></ProtectedRoute>}/>
+        <Route path='admin/menumanagement' element={<ProtectedRoute role="admin"><MenuManagement/></ProtectedRoute>}/>
+        <Route path='*' element={<Navigate to="/" />}/>
+      </Route>
+    </Routes>
+  )
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [users, setU] = useState([])
-
-  useEffect(() => {
-    axios.get('http://localhost:3000/users')
-    .then((res) => {
-      setU(res.data)
-    })
-  }, [])
-
   return (
-    <>
-      <div className='m-5 p-10 bg-emerald-500 flex justify-center'>
-        <button className='bg-blue-400 rounded-2xl p-2' onClick={() => setCount((count) => count+1)}>
-          Sign up {count}
-        </button>
-        {
-          users.map((user, index) => (
-            <div key={index}>
-              <h1>{user.name}</h1>
-              <h2>{user.email}</h2>
-            </div>
-          ))
-        }
-      </div>
-    </>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   )
 }
 

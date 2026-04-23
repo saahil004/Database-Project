@@ -7,7 +7,7 @@ const connectDB = async () => {
             host: "localhost",
             user: "root",
             password: "sirfaisal",
-            database: "test"
+            database: "dbsproj"
         })
 
         console.log(`MySQL connected! Host: ${connection.config.host}`)

@@ -59,7 +59,7 @@ CREATE TABLE orderitems (
 	menu_item_id INT,
 	quantity INT DEFAULT 1 NOT NULL CHECK (quantity > 0),
 	PRIMARY KEY (order_id, menu_item_id),
-        FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (menu_item_id) REFERENCES menuitems(menu_item_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -83,6 +83,41 @@ CREATE TABLE categories (
 );
 
 
+Triggers:
+- reduce stock after order
+- prevent ordering out of stock items
+- assign delivery guy after order is confirmed
+DELIMITER $$
+
+CREATE TRIGGER auto_assign_delivery
+AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE selected_guy INT;
+
+    -- Run only when status changes to 'preparing'
+    IF NEW.status = 'preparing' AND OLD.status != 'preparing' THEN
+
+        -- Find delivery guy with minimum active orders
+        SELECT dg.deliveryguy_id
+        INTO selected_guy
+        FROM deliveryguy dg
+        LEFT JOIN delivery d 
+            ON dg.deliveryguy_id = d.deliveryguy_id 
+            AND d.deliverystatus != 'delivered'
+        GROUP BY dg.deliveryguy_id
+        ORDER BY COUNT(d.delivery_id) ASC
+        LIMIT 1;
+
+        -- Assign delivery
+        INSERT INTO delivery (order_id, deliveryguy_id, deliverystatus)
+        VALUES (NEW.order_id, selected_guy, 'assigned');
+
+    END IF;
+
+END$$
+
+DELIMITER ;
 
 
 
