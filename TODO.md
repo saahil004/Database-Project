@@ -1,15 +1,11 @@
-# Task Complete: Navbar & Homepage Updates
+# TODO
 
-## Summary:
-- Navbar: Contact → Help link (href="#help")
-- Created Home.jsx: Cool animated landing page at `/` with hero, features, CTA
-- App.jsx: Added index route `/` → Home, * → /
-- Menu.jsx: Fixed grid display (removed broken stagger class), kept hero/filter animations
-- index.css: Enhanced with blob animations, keyframes for all effects
+## Order workflow enforcement
+- [ ] Update backend admin order status update endpoint to allow only confirmation (pending -> preparing) and block delivery/completed updates.
+- [ ] Update backend delivery order update endpoint to allow only delivered (assigned delivery -> delivered) and to update `orders.status` and `delivery.deliverystatus` consistently.
+- [ ] Ensure delivery-guy can only update orders assigned to them.
+- [ ] Fix frontend admin dashboard so it only shows “Confirm/Start Preparing” (no “Mark Delivered”).
+- [ ] Fix frontend delivery portal so it calls the correct status value for delivery completion.
+- [ ] Ensure frontend customer order status display matches new states.
+- [ ] Run backend/frontend tests or basic API smoke checks.
 
-## Test:
-cd Frontend && npm run dev
-- http://localhost:5173/ → New animated Home page
-- /menu → Menu with animations (check console/backend for items)
-
-Ready!

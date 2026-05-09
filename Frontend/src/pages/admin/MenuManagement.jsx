@@ -40,7 +40,7 @@ const MenuManagement = () => {
   const updateStock = async (menu_item_id) => {
     setUpdating(prev => ({...prev, [menu_item_id]: true}));
     try {
-      const response = await axios.patch(`http://localhost:3000/api/v1/menu/${menu_item_id}/stock`, {
+      const response = await axios.put(`http://localhost:3000/api/v1/menu/updatemenuitem/${menu_item_id}`, {
         quantity: editForm.quantity
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -48,7 +48,7 @@ const MenuManagement = () => {
       fetchMenu(); // Refresh list
       setEditForm(null);
     } catch (error) {
-      alert('Update failed: ' + error.response.data.message);
+      alert('Update failed: ' + (error.response?.data?.message || error.message));
     } finally {
       setUpdating(prev => ({...prev, [menu_item_id]: false}));
     }
@@ -56,6 +56,18 @@ const MenuManagement = () => {
 
   const editStock = (item) => {
     setEditForm({ menu_item_id: item.menu_item_id, quantity: item.quantity });
+  };
+
+  const deleteMenuItem = async (menu_item_id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/v1/menu/deletemenuitem/${menu_item_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchMenu(); // Refresh list
+      alert('Item deleted');
+    } catch (error) {
+      alert('Delete failed: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading menu...</div>;
@@ -137,13 +149,24 @@ const MenuManagement = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${parseFloat(item.price).toFixed(2)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold">
                       <button
                         onClick={() => editStock(item)}
                         disabled={updating[item.menu_item_id]}
-                        className="text-blue-600 hover:text-blue-900 mr-3 disabled:opacity-50"
+                        className="text-indigo-600 hover:text-indigo-900 mr-3 disabled:opacity-50"
                       >
-                        Update Stock
+                        Edit Stock
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (window.confirm('Delete ${item.name}?')) {
+                            deleteMenuItem(item.menu_item_id);
+                          }
+                        }}
+                        className="text-red-600 hover:text-red-900"
+                        disabled={updating[item.menu_item_id]}
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>

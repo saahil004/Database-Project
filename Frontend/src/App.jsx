@@ -15,11 +15,23 @@ import MyOrders from './pages/MyOrders.jsx'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Help from './pages/Help.jsx'
+import DeliveryLogin from './pages/delivery.login.jsx'
+import DeliveryPortal from './pages/delivery/Portal.jsx'
 
 function ProtectedRoute({ children, role }) {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
+  
+  // Wait for auth to finish loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-gray-600">Loading...</div>
+      </div>
+    )
+  }
+  
   if (!isAuthenticated) return <Navigate to="/customerlogin" />
-  if (role && user.role !== role) return <Navigate to="/menu" />
+  if (role && user && user.role !== role) return <Navigate to="/menu" />
   return children
 }
 
@@ -36,9 +48,11 @@ function AppContent() {
 
         <Route path='cart' element={<Cart/>}/>
         <Route path='myorders' element={<ProtectedRoute role="customer"><MyOrders/></ProtectedRoute>}/>
-        <Route path='customerlogin' element={<CustomerLogin/>}/>
+<Route path='customerlogin' element={<CustomerLogin/>}/>
+        <Route path='register' element={<CustomerRegister/>}/>
         <Route path='adminlogin' element={<AdminLogin/>}/>
-        <Route path='deliveryguylogin' element={<CustomerLogin/>}/>
+        <Route path='deliveryguylogin' element={<DeliveryLogin/>}/>
+        <Route path='deliveryguyportal' element={<ProtectedRoute role="deliveryguy"><DeliveryPortal/></ProtectedRoute>}/>
         <Route path='customerregister' element={<CustomerRegister/>}/>
         <Route path='admin/portal' element={<ProtectedRoute role="admin"><AdminPortal/></ProtectedRoute>}/>
         <Route path='admin/dashboard' element={<ProtectedRoute role="admin"><AdminDashboard/></ProtectedRoute>}/>

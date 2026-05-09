@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 
-const CustomerLogin = () => {
+const DeliveryLogin = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
@@ -23,22 +23,23 @@ const CustomerLogin = () => {
         setLoading(true)
 
         try {
-            const response = await axios.post("http://localhost:3000/api/v1/auth/logincustomer", {
+            const response = await axios.post("http://localhost:3000/api/v1/auth/logindeliveryguy", {
                 username,
                 password,
             })
 
             if (response.data?.success) {
-                console.log("Login successful", response.data)
+                console.log("Delivery guy login successful", response.data)
                 auth.login({
                   token: response.data.token,
                   data: response.data.data
                 });
-                navigate("/menu")
+                navigate("/deliveryguyportal")
             } else {
                 setError(response.data?.message || "Login failed. Please try again.")
             }
         } catch (err) {
+            console.log("Delivery guy login error:", err)
             setError(err.response?.data?.message || "Unable to log in. Please check your credentials.")
         } finally {
             setLoading(false)
@@ -47,9 +48,11 @@ const CustomerLogin = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI0jsxp4lD5eAmuDbw3EUED487B9MJ5GnpYA&s" alt="no" /> */}
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-                <h1 className="text-2xl font-semibold text-gray-900 mb-6">Customer Login</h1>
+                <h1 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Delivery Guy Login</h1>
+                <div className="mb-4 text-center text-sm text-gray-500">
+                    Enter your delivery credentials
+                </div>
 
                 {error && (
                     <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 px-4 py-3">
@@ -86,7 +89,7 @@ const CustomerLogin = () => {
                         />
                     </div>
 
-<button
+                    <button
                         type="submit"
                         disabled={loading}
                         className="w-full rounded-md bg-orange-600 text-white py-2 text-sm font-semibold hover:bg-orange-700 transition duration-200 disabled:cursor-not-allowed disabled:bg-orange-300"
@@ -94,21 +97,9 @@ const CustomerLogin = () => {
                         {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
-
-                <div className="mt-4 text-center">
-                    <p className="text-sm text-gray-600">
-                        Don't have an account?{' '}
-                        <button
-                            onClick={() => navigate("/register")}
-                            className="text-orange-600 hover:text-orange-700 font-medium"
-                        >
-                            Register here
-                        </button>
-                    </p>
-                </div>
             </div>
         </div>
     )
 }
 
-export default CustomerLogin
+export default DeliveryLogin

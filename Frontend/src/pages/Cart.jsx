@@ -65,8 +65,20 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div key={item.menu_item_id} className="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
               <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-xl">🍽️</span>
+                <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                  {(item.image_url || item.imageurl) ? (
+                    <img
+                      src={item.image_url || item.imageurl}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <span className="text-xl">🍽️</span>
+                  )}
+
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">{item.name}</h3>

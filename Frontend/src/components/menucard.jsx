@@ -1,17 +1,13 @@
-
 const MenuCard = ({ item, index, isAdded, onAdd }) => {
   const outOfStock = item.quantity === 0
 
   return (
-    <div
-      className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-[1.02] transition duration-300"
-      style={{ animationDelay: `${index * 55}ms` }}
-    >
+    <div className="bg-white rounded-xl shadow-md overflow-hidden">
       {/* IMAGE */}
       <div className="relative h-48 bg-gray-100 flex items-center justify-center">
         {item.image_url ? (
           <img
-src={item.image_url}
+            src={item.image_url}
             alt={item.name}
             className="w-full h-full object-cover"
           />

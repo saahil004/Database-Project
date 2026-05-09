@@ -9,6 +9,7 @@ const AdminLogin = () => {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const auth = useAuth()
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -28,27 +29,27 @@ const AdminLogin = () => {
             })
 
             if (response.data?.success) {
-                const auth = useAuth();
+                console.log("Admin login successful", response.data)
                 auth.login({
                   token: response.data.token,
                   data: response.data.data
                 });
-                navigate("/admin")
+                navigate("/admin/portal")
             } else {
                 setError(response.data?.message || "Login failed. Please try again.")
             }
         } catch (err) {
+            console.log("Admin login error:", err)
             setError(err.response?.data?.message || "Unable to log in. Please check your credentials.")
         } finally {
             setLoading(false)
         }
     }
 
-    return (
+return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-            {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI0jsxp4lD5eAmuDbw3EUED487B9MJ5GnpYA&s" alt="no" /> */}
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-                <h1 className="text-2xl font-semibold text-gray-900 mb-6">Admin Login</h1>
+                <h1 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Admin Login</h1>
 
                 {error && (
                     <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 px-4 py-3">

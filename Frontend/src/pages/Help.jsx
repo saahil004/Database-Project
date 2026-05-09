@@ -59,8 +59,15 @@ const Help = () => {
         conversation: messages.slice(-3)
       });
 
-      const reply = res.data.data.reply;
-      setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+      const payload = res.data;
+      const reply = payload?.data?.reply ?? payload?.reply ?? "";
+      console.log('Chat API response payload:', payload);
+
+      if (reply) {
+        setMessages(prev => [...prev, { role: 'assistant', content: reply }] );
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: `No reply received from server. (status=${payload?.statusCode ?? 'n/a'})` }]);
+      }
     } catch (error) {
       console.error(error);
       const fallbackReplies = [

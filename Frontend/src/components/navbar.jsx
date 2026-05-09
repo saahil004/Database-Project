@@ -16,13 +16,13 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="bg-gradient-to-r from-gray-400 to-gray-900 shadow-lg sticky top-0 z-50">
+        <nav className="bg-gradient-to-r from-orange-400 to-orange-200 shadow-lg sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     {/* Logo/Brand */}
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center space-x-2">
-                            <span className="text-3xl">🍽️</span>
+                            <span className="text-3xl"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7UuGPRbA2181nGIy9rXpIwdA0SUc9kF9kZg&s" alt="🍔" className='size-10'/></span>
                             <span className="text-white font-bold text-2xl hidden sm:inline">FoodHub</span>
                         </Link>
                     </div>
@@ -35,11 +35,17 @@ const Navbar = () => {
                         >
                             Menu
                         </Link>
-                        <Link 
+<Link 
                             to="/cart" 
                             className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-amber-700 transition duration-300"
                         >
                             Cart
+                        </Link>
+                        <Link 
+                            to="/deliveryguylogin" 
+                            className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-amber-700 transition duration-300"
+                        >
+                            Delivery Login
                         </Link>
                         <Link 
                             to="/about" 
@@ -48,12 +54,13 @@ const Navbar = () => {
                         >
                             About
                         </Link>
-                        <a 
-                            href="#help"
+                        <Link 
+                            to="/help" 
                             className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-amber-700 transition duration-300"
+                            onClick={() => setIsOpen(false)}
                         >
                             Help
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Right Side */}
@@ -146,7 +153,6 @@ const Navbar = () => {
                         >
                             Cart {cartItems.length > 0 && `(${cartItems.length})`}
                         </Link>
-
                         <Link
                             to="/about"
                             className="block text-white px-3 py-2 rounded-md text-base font-medium hover:bg-amber-700 transition duration-300"
@@ -154,14 +160,13 @@ const Navbar = () => {
                         >
                             About
                         </Link>
-
-                        <a
-                            href="#help"
+                        <Link
+                            to="/help"
                             className="block text-white px-3 py-2 rounded-md text-base font-medium hover:bg-amber-700 transition duration-300"
                             onClick={() => setIsOpen(false)}
                         >
                             Help
-                        </a>
+                        </Link>
                         {isAuthenticated ? (
                             <button 
                                 onClick={() => { logout(); setIsOpen(false); }}
@@ -186,3 +191,4 @@ const Navbar = () => {
 }
 
 export default Navbar
+

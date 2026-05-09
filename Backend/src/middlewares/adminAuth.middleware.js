@@ -1,8 +1,9 @@
 import { asyncHandler } from '../utils/asynchandler.js';
 import { authMiddleware } from './auth.middleware.js';
 
-export const adminAuth = asyncHandler(async (req, res, next) => {
-  await authMiddleware(req, res, async () => {
+export const adminAuth = (req, res, next) => {
+  authMiddleware(req, res, (err) => {
+    if (err) return next(err);
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -11,4 +12,4 @@ export const adminAuth = asyncHandler(async (req, res, next) => {
     }
     next();
   });
-});
+};

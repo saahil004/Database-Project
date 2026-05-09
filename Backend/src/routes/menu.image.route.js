@@ -20,10 +20,13 @@ router.post("/menu", upload.single("image"), async (req, res) => {
 
     const db = req.app.locals.db;
 
+    // Keep DB columns consistent with menuitems table used by getMenu (menu.controller.js)
+    // menuitems(imageurl) is what the menu list endpoint selects as image_url.
     await db.query(
-      "INSERT INTO menu_items (name, price, image) VALUES (?, ?, ?)",
-      [req.body.name, req.body.price, imageUrl]
+      "INSERT INTO menuitems (name, price, quantity, category_id, imageurl) VALUES (?, ?, ?, ?, ?)",
+      [req.body.name, req.body.price, req.body.quantity ?? 0, req.body.category_id, imageUrl]
     );
+
 
     res.json({
       success: true,

@@ -121,7 +121,45 @@ DELIMITER ;
 
 
 
+DELIMITER //
 
+CREATE TRIGGER trg_check_stock
+BEFORE INSERT ON orderitems
+FOR EACH ROW
+BEGIN
+    DECLARE available_stock INT;
+
+    SELECT quantity INTO available_stock
+    FROM menuitems
+    WHERE menu_item_id = NEW.menu_item_id;
+
+    IF available_stock < NEW.quantity THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Not enough stock available';
+    END IF;
+END//
+
+DELIMITER ;
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_update_total
+AFTER INSERT ON orderitems
+FOR EACH ROW
+BEGIN
+    UPDATE orders
+    SET total_bill = (
+        SELECT SUM(oi.quantity * mi.price)
+        FROM orderitems oi
+        JOIN menuitems mi ON oi.menu_item_id = mi.menu_item_id
+        WHERE oi.order_id = NEW.order_id
+    )
+    WHERE order_id = NEW.order_id;
+END//
+
+DELIMITER ;
 
 
 
